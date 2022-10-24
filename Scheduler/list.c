@@ -1,14 +1,11 @@
 /**
  * Various list operations
  */
- 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
 #include "list.h"
 #include "task.h"
-
 
 // add a new task to the list of tasks
 void insert(struct node **head, Task *newTask) {
@@ -18,6 +15,24 @@ void insert(struct node **head, Task *newTask) {
     newNode->task = newTask;
     newNode->next = *head;
     *head = newNode;
+}
+
+void insertOnEnd(struct node **head, Task *newTask) {
+    struct node *newNode = malloc(sizeof(struct node));
+
+    newNode->task = newTask;
+    newNode->next = NULL;
+    if(*head == NULL) {
+        *head = newNode;
+    } else {
+        struct node *prev = *head;
+        struct node *temp = prev->next;
+        while(temp != NULL) {
+            prev = temp;
+            temp = temp->next;
+        }
+        prev->next = newNode;
+    }
 }
 
 // delete the selected task from the list
