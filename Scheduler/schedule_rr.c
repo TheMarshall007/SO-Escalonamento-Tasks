@@ -7,6 +7,7 @@
 int contTid = 0;
 struct node **list;
 
+// Add a new task to the queue
 void add(char *name, int priority, int burst) {
     if(contTid == 0) {
         list = malloc(sizeof(struct node));

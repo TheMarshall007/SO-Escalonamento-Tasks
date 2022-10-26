@@ -5,17 +5,13 @@
 #include "CPU.h"
 
 int contTid = 0;
-struct node **filas[5];
+struct node **list[5];
 
-void allocTask(Task *task) {
-    insertOnEnd(filas[task->priority-1], task);
-}
-
+// Add a new task to the queue
 void add(char *name, int priority, int burst) {
     if(contTid == 0) {
         for(int i = 0; i < 5; ++i) {
-            struct node **list = malloc(sizeof(struct node));
-            filas[i] = list;
+            list[i] = malloc(sizeof(struct node));
         }
     }
 
@@ -25,15 +21,16 @@ void add(char *name, int priority, int burst) {
     newTask->tid = ++contTid;
     newTask->priority = priority;
     newTask->burst = burst;
-    insertOnEnd(filas[newTask->priority-1], newTask);
+    insertOnEnd(list[newTask->priority-1], newTask);
 }
 
+// Get the next element in the queue
 Task * getNextTask() {
     Task *next = NULL;
 
     for(int i = 4; i >= 0; --i) {
-        if(*filas[i] != NULL) {
-            next = (*filas[i])->task;
+        if(*list[i] != NULL) {
+            next = (*list[i])->task;
             break;
         }
     }
@@ -47,11 +44,11 @@ void schedule() {
         current->burst -= QUANTUM;
 
         if(current->burst <= 0) {
-            delete(filas[current->priority - 1], current);
+            delete(list[current->priority - 1], current);
             continue;
         }
 
-        insertOnEnd(filas[current->priority-1], current);
-        delete(filas[current->priority-1], current);
+        insertOnEnd(list[current->priority-1], current);
+        delete(list[current->priority-1], current);
     }
 }
